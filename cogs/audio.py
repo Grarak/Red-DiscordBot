@@ -1663,6 +1663,21 @@ class Audio:
         self._delete_playlist(server, name)
         await self.bot.say("Playlist deleted.")
 
+    @commands.command(name="summon", no_pm=True, pass_context=True)
+    async def summon(self, ctx):
+        server = ctx.message.server
+        voice_channel = ctx.message.author.voice_channel
+        if voice_channel is None:
+            await self.bot.say("You must be in a voice channel")
+            return
+
+        if not self.voice_connected(server):
+            await self._join_voice_channel(voice_channel)
+        else:
+            if self.voice_client(server).channel != voice_channel:
+                await self._stop_and_disconnect(server)
+                await self._join_voice_channel(voice_channel)
+
     @playlist.command(pass_context=True, no_pm=True, name="start")
     async def playlist_start(self, ctx, name):
         """Plays a playlist."""
