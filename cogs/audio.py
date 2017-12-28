@@ -1686,8 +1686,6 @@ class Audio:
         voice_channel = ctx.message.author.voice_channel
         channel = ctx.message.channel
 
-        caller = inspect.currentframe().f_back.f_code.co_name
-
         if voice_channel is None:
             await self.bot.say("You must be in a voice channel to start a"
                                " playlist.")
@@ -1718,8 +1716,7 @@ class Audio:
             playlist = self._load_playlist(server, name,
                                            local=self._playlist_exists_local(
                                                server, name))
-            if caller == "playlist_start_mix":
-                shuffle(playlist.playlist)
+            shuffle(playlist.playlist)
 
             self._play_playlist(server, playlist, channel)
             await self.bot.say("Playlist queued.")
